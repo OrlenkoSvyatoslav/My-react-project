@@ -2,32 +2,31 @@
 // import TextInput from "../TextInput/TextInput";
 // import LangSwitcher from "../LangSwitcher/LangSwitcher";
 // import OrderForm from "../OrderForm/OrderForm";
-import FeedbackForm from "../FeedbackForm/FeedbackForm";
-import css from "./App.module.css";
-
+// import FeedbackForm from "../FeedbackForm/FeedbackForm";
+// import css from "./App.module.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import ArticleList from "../ArticleList/ArticleList";
 export default function App() {
-  // const handleAddUser = (newUser) => {
-  //   console.log(newUser);
-  // };
+  const [articles, setArticles] = useState([]);
 
-  // const [inputValue, setInputValue] = useState("qwe");
+  useEffect(() => {
+    async function fetchArticles() {
+      const response = await axios.get(
+        "https://hn.algolia.com/api/v1/search?query=react"
+      );
+      setArticles(response.data.hits);
+      console.log(response.data.hits[0].author);
+    }
 
-  // const [lang, setLang] = useState("uk");
+    fetchArticles();
+  }, []);
 
   return (
-    <div className={css.container}>
-      <h1>Forms in React</h1>
+    <div>
+      <h1>Latest articles</h1>
 
-      {/* <UserForm onAdd={handleAddUser} /> */}
-
-      {/* <TextInput value={inputValue} onChange={setInputValue} />
-      <p>{inputValue}</p> */}
-
-      {/* <LangSwitcher value={lang} onChangeLang={setLang} />
-      <p>Select lang:{lang}</p> */}
-
-      {/* <OrderForm /> */}
-      <FeedbackForm />
+      {articles.length > 0 && <ArticleList items={articles} />}
     </div>
   );
 }
